@@ -1,67 +1,66 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, Button } from 'react-native';
+import PanelEquipo from './components/PanelEquipo';
+import BotonAccion from './components/BotonAccion'
 
+/* 
+  1) El estado debe vivir en el padre, porque si cada './PanelEquipo' guardara su propio estado en un useState local, 
+  el componente padre no podria comparar ambos puntajes para calcular quien va ganando (consigna del Ejercicio 3), 
+  mostrar la leyenda de diferencia ni deshabilitar el boton de "Nuevo partido". Al tener el estado en el padre, 
+  la pantalla principal centraliza los datos y puede pasárselos a los hijos.
+*/
 
 type Equipo = 'local' | 'visitante';
 
 const App: React.FC = () => {
-
+  {/* Constantes que almacenan los puntos de cada equipo */}
   const [marcadorLocal, setLocal] = useState<number>(0);
   const [marcadorVisitante, setVisitante] = useState<number>(0);
 
+  {/* Funcion para sumar puntos a los equipos */}
   const anotar = (equipo: Equipo, puntos: number) => {
-    if(equipo === "local"){
+    if (equipo === 'local') {
       setLocal(prev => prev + puntos);
-    }
-    else{
+    } else {
       setVisitante(prev => prev + puntos);
     }
   };
 
+  {/* Funcion que recetea los puntos de los equipos */}
   const nuevoPartido = () => {
     setLocal(0);
     setVisitante(0);
-  }
-
-
+  };
 
   return (
     <View style={styles.contenedor}>
-      <Text style={styles.titulo}>Tablero de Basquet</Text>
+      <Text style={styles.titulo}>Tablero de Básquet</Text>
 
       <View style={styles.tablero}>
+        {/* Panel Local: Azul */}
+        <PanelEquipo
+          nombre="Local"
+          puntos={marcadorLocal}
+          color="#2563eb"
+          onAnotar={(punto) => anotar('local', punto)}
+        />
 
-        <View style={styles.equipoCard}>
-          <Text style={styles.equipo}>Equipo Loocal</Text>
-          <Text style={styles.equipo}>{marcadorLocal}</Text>
-          <View style={styles.botonesGroup}>
-            <Button title="+1" onPress={() => anotar('local', 1)} />
-            <Button title="+2" onPress={() => anotar('local', 2)} />
-            <Button title="+3" onPress={() => anotar('local', 3)} />
-          </View>
-        </View>
-
-        <View style={styles.equipoCard}>
-          <Text style={styles.equipo}>Eqipo Visitante</Text>
-          <Text style={styles.equipo}>{marcadorVisitante}</Text>
-          <View style={styles.botonesGroup}>
-            <Button title="+1" onPress={() => anotar('visitante', 1)} />
-            <Button title="+2" onPress={() => anotar('visitante', 2)} />
-            <Button title="+3" onPress={() => anotar('visitante', 3)} />
-          </View>
-        </View>
-
+        {/* Panel Visitante: Rojo */}
+        <PanelEquipo
+          nombre="Visitante"
+          puntos={marcadorVisitante}
+          color="#dc2626"
+          onAnotar={(punto) => anotar('visitante', punto)}
+        />
       </View>
 
+       {/* Boton de nuevo partido */}
       <View style={styles.resetContainer}>
-        <Button title="Nuevo partido" color="#020202" onPress={nuevoPartido} />
+        <BotonAccion titulo="Nuevo partido" color="#020202" onPress={nuevoPartido} />
       </View>
-
     </View>
-
   );
 };
-
 
 const styles = StyleSheet.create({
   contenedor: {
@@ -70,7 +69,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   titulo: {
     fontSize: 30,
     fontWeight: 'bold',
@@ -81,38 +79,13 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
   },
-
   tablero: {
     flexDirection: 'row',
-    //width: '90%',
-    justifyContent: 'space-between',
+    width: '95%',
   },
-
-  equipoCard: {
-    //flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    width: '45%',
-    marginHorizontal: 5,
-    padding: 15,
-    borderRadius: 8,
-  },
-
-  equipo: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    textAlign: 'center',
-  },
-
-  botonesGroup: {
-    gap: 10,
-    width: '100%',
-  },
-
   resetContainer: {
     marginTop: 40,
   },
-})
+});
 
 export default App;
