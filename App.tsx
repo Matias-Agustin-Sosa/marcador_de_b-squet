@@ -4,6 +4,7 @@ import PanelEquipo from './components/PanelEquipo';
 import BotonAccion from './components/BotonAccion'
 
 /* 
+  Respuesta Ejercicio 2
   1) El estado debe vivir en el padre, porque si cada './PanelEquipo' guardara su propio estado en un useState local, 
   el componente padre no podria comparar ambos puntajes para calcular quien va ganando (consigna del Ejercicio 3), 
   mostrar la leyenda de diferencia ni deshabilitar el boton de "Nuevo partido". Al tener el estado en el padre, 
@@ -21,7 +22,8 @@ const App: React.FC = () => {
   const anotar = (equipo: Equipo, puntos: number) => {
     if (equipo === 'local') {
       setLocal(prev => prev + puntos);
-    } else {
+    } 
+    else {
       setVisitante(prev => prev + puntos);
     }
   };
@@ -31,6 +33,21 @@ const App: React.FC = () => {
     setLocal(0);
     setVisitante(0);
   };
+
+  {/* Funcion para determinar ganador */}
+  const resultado = () => {
+    const diferencia = Math.abs(marcadorLocal - marcadorVisitante);
+
+    if (marcadorLocal > marcadorVisitante) {
+      return {Diferencia: `Gana el equipo Local por ${diferencia}`, Local: true , Visitante: false};
+    }
+    else if (marcadorLocal < marcadorVisitante) {
+      return {Diferencia: `Gana el equipo Visitante por ${diferencia}`, Local: false , Visitante: true};
+    }
+    else{
+      return {Diferencia: 'Empate', Gana: false};
+    }
+  }
 
   return (
     <View style={styles.contenedor}>
@@ -42,6 +59,7 @@ const App: React.FC = () => {
           nombre="Local"
           puntos={marcadorLocal}
           color="#2563eb"
+          gana={Boolean(resultado().Local)}
           onAnotar={(punto) => anotar('local', punto)}
         />
 
@@ -50,14 +68,18 @@ const App: React.FC = () => {
           nombre="Visitante"
           puntos={marcadorVisitante}
           color="#dc2626"
+          gana={Boolean(resultado().Visitante)}
           onAnotar={(punto) => anotar('visitante', punto)}
         />
       </View>
 
        {/* Boton de nuevo partido */}
       <View style={styles.resetContainer}>
-        <BotonAccion titulo="Nuevo partido" color="#020202" onPress={nuevoPartido} />
+        {/* Coloco una condicion para bloquer el boton (disabled) */}
+        <BotonAccion titulo="Nuevo partido" color="#020202" disabled={marcadorLocal === 0 && marcadorVisitante === 0} onPress={nuevoPartido} />
       </View>
+
+      <Text style={styles.marcador}>{resultado().Diferencia}</Text>
     </View>
   );
 };
@@ -85,6 +107,16 @@ const styles = StyleSheet.create({
   },
   resetContainer: {
     marginTop: 40,
+  },
+  marcador: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 40,
+    color: '#04ff3e',
+    backgroundColor: '#000000',
+    padding: 10,
+    borderRadius: 8,
   },
 });
 

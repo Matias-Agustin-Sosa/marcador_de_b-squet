@@ -7,6 +7,7 @@ interface PanelEquipoProps {
   nombre: string;
   puntos: number;
   color: string;
+  gana: boolean;
   onAnotar: (puntos: number) => void;
 }
 
@@ -14,10 +15,14 @@ export const PanelEquipo: React.FC<PanelEquipoProps> = ({
   nombre,
   puntos,
   color,
+  gana,
   onAnotar,
 }) => {
+  // Calculamos el color del borde
+  const borderColor = gana ? color : '#fff';
+
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, { borderColor }]}>
       <Text style={styles.nombre}>{nombre}</Text>
       
       {/* Aplicamos el color dinamico recibido por props al numero */}
@@ -49,6 +54,7 @@ export const PanelEquipo: React.FC<PanelEquipoProps> = ({
 
 const styles = StyleSheet.create({
   card: {
+    borderWidth: 5,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
