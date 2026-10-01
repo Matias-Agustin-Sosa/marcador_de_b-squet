@@ -3,14 +3,6 @@ import { StyleSheet, View, Text, Button } from 'react-native';
 import PanelEquipo from './components/PanelEquipo';
 import BotonAccion from './components/BotonAccion'
 
-/* 
-  Respuesta Ejercicio 2
-  1) El estado debe vivir en el padre, porque si cada './PanelEquipo' guardara su propio estado en un useState local, 
-  el componente padre no podria comparar ambos puntajes para calcular quien va ganando (consigna del Ejercicio 3), 
-  mostrar la leyenda de diferencia ni deshabilitar el boton de "Nuevo partido". Al tener el estado en el padre, 
-  la pantalla principal centraliza los datos y puede pasárselos a los hijos.
-*/
-
 type Equipo = 'local' | 'visitante';
 
 const App: React.FC = () => {
